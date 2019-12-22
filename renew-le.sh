@@ -23,13 +23,17 @@ echo "fi" >> /reload.sh
 echo "docker kill -s USR2 $RELOAD" >> /reload.sh
 chmod +x /reload.sh
 
+fi
+
 while true
 do
-	if [ -f /etc/letsencrypt/live/*/fullchain.pem ]; then
-		certbot renew --http-01-port=4433 --preferred-challenges http --deploy-hook /reload.sh
-	else
-		certbot certonly --force-renewal --expand --standalone $DNSNAME --non-interactive --agree-tos --email vandenbergh@bertold.org --must-staple --http-01-port=4433 --preferred-challenges http
-		/reload.sh
+	if [ "x$DNSNAME" != "x" ]; then
+		if [ -f /etc/letsencrypt/live/*/fullchain.pem ]; then
+	    		certbot renew --http-01-port=4433 --preferred-challenges http --deploy-hook /reload.sh
+		else
+			certbot certonly --force-renewal --expand --standalone $DNSNAME --non-interactive --agree-tos --email ${EMAIL:=vandenbergh@bertold.org} --must-staple --http-01-port=4433 --preferred-challenges http
+			/reload.sh
+		fi
 	fi
 
 	for i in `seq 0 23`
