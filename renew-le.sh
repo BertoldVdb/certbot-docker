@@ -23,8 +23,6 @@ echo "fi" >> /reload.sh
 echo "docker kill -s USR2 $RELOAD" >> /reload.sh
 chmod +x /reload.sh
 
-fi
-
 while true
 do
 	if [ "x$DNSNAME" != "x" ]; then
